@@ -1,0 +1,476 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#090a0d">
+    <title>CASE 404: Missing Truth</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="ambient"></div>
+
+<!-- ================================== -->
+<!-- START SCREEN -->
+<!-- ================================== -->
+
+<section id="startScreen" class="screen active">
+    <div class="start-content">
+
+        <p class="eyebrow">CONFIDENTIAL INVESTIGATION FILE</p>
+
+        <div class="case-stamp">
+            CLASSIFIED • CASE NO. 404
+        </div>
+
+        <h1>CASE <span>404</span></h1>
+        <h2>MISSING TRUTH</h2>
+
+        <p class="tagline">
+            Every secret leaves a trace.
+        </p>
+
+        <button class="primary-btn"
+            onclick="showScreen('instructionsScreen')">
+            START INVESTIGATION
+        </button>
+
+        <p class="small-text">
+            A DIGITAL DETECTIVE MYSTERY GAME
+        </p>
+
+        <p class="small-text">
+            CASE STATUS: UNSOLVED
+        </p>
+
+    </div>
+</section>
+
+
+<!-- ================================== -->
+<!-- INSTRUCTIONS -->
+<!-- ================================== -->
+
+<section id="instructionsScreen" class="screen">
+    <div class="panel">
+
+        <p class="eyebrow">BEFORE YOU BEGIN</p>
+        <h2>INVESTIGATION GUIDELINES</h2>
+
+        <div class="instruction-list">
+            <p><span>01.</span> Read the case briefing carefully.</p>
+            <p><span>02.</span> Search for clues that reveal the computer password.</p>
+            <p><span>03.</span> Use hints when necessary. Every hint deducts 5 points.</p>
+            <p><span>04.</span> Every incorrect password deducts 10 points.</p>
+            <p><span>05.</span> Unlock Elena's computer to explore its contents.</p>
+            <p><span>06.</span> Examine files, photos, messages, notes, and browser history.</p>
+            <p><span>07.</span> Pay attention to details. They may reveal the truth.</p>
+        </div>
+
+        <div class="warning">
+            WARNING: Every detail may be important.
+            Trust nothing without evidence.
+        </div>
+
+        <button class="back-btn"
+            onclick="backToStart()">
+            ← BACK
+        </button>
+
+        <button class="primary-btn"
+            onclick="showScreen('registrationScreen')">
+            CONTINUE
+        </button>
+
+    </div>
+</section>
+
+
+<!-- ================================== -->
+<!-- INVESTIGATOR REGISTRATION -->
+<!-- ================================== -->
+
+<section id="registrationScreen" class="screen">
+    <div class="panel">
+
+        <p class="eyebrow">INVESTIGATOR IDENTIFICATION</p>
+        <h2>WHO IS ON THE CASE?</h2>
+
+        <p>
+            Enter your investigator name to access the case file.
+        </p>
+
+        <input
+            type="text"
+            id="investigatorName"
+            placeholder="Enter your name"
+            maxlength="25"
+            autocomplete="off"
+        >
+
+        <button class="back-btn"
+            onclick="backToInstructions()">
+            ← BACK
+        </button>
+
+        <button class="primary-btn"
+            onclick="registerInvestigator()">
+            CONFIRM IDENTITY
+        </button>
+
+        <p id="registrationError" class="error-message"></p>
+
+    </div>
+</section>
+
+
+<!-- ================================== -->
+<!-- CASE BRIEFING -->
+<!-- ================================== -->
+
+<section id="briefingScreen" class="screen">
+    <div class="panel briefing-panel">
+
+        <p class="eyebrow">CASE FILE #404</p>
+        <h2>UNEXPLAINED DEATH</h2>
+
+        <div class="victim-profile">
+
+            <img
+                src="assets/elena.png"
+                alt="Elena Marie Santos"
+                class="victim-photo"
+            >
+
+            <div class="victim-info">
+
+                <h3>ELENA MARIE SANTOS</h3>
+
+                <p>AGE: 21 YEARS OLD</p>
+                <p>STATUS: DECEASED</p>
+                <p>CASE: UNEXPLAINED DEATH</p>
+                <p>LAST KNOWN DEVICE: PERSONAL LAPTOP</p>
+
+                <p class="discovery-date">
+                    DATE BODY WAS DISCOVERED: JULY 10, 2026
+                </p>
+
+            </div>
+        </div>
+
+        <div class="case-description">
+
+            <p>
+                Elena Marie Santos, a 21-year-old woman, was found dead
+                under mysterious circumstances. Authorities have yet to
+                determine what truly happened before her death.
+            </p>
+
+            <p>
+                Her personal laptop was recovered from her apartment.
+                Investigators believe it may contain important information
+                about her final days.
+            </p>
+
+        </div>
+
+        <div class="warning">
+            The computer is locked. Your mission is to gain access
+            and discover what Elena left behind.
+        </div>
+
+        <button class="back-btn"
+            onclick="backToRegistration()">
+            ← BACK
+        </button>
+
+        <button class="primary-btn"
+            onclick="showScreen('missionScreen')">
+            ACCEPT CASE
+        </button>
+
+    </div>
+</section>
+
+
+<!-- ================================== -->
+<!-- MISSION INTRODUCTION -->
+<!-- ================================== -->
+
+<section id="missionScreen" class="screen">
+    <div class="panel">
+
+        <p class="eyebrow">MISSION 01</p>
+        <h2>THE LOCKED COMPUTER</h2>
+
+        <div class="mission-icon">⌨</div>
+
+        <p>
+            You are now assigned to investigate Elena's personal laptop.
+            Somewhere inside it may be the answer to her unexplained death.
+        </p>
+
+        <p>
+            Find the password using the available clues. Once the computer
+            is unlocked, examine its files, photos, messages, notes,
+            and browser history.
+        </p>
+
+        <p class="warning">
+            Your investigation begins when you enter the password
+            investigation. Time matters.
+        </p>
+
+        <button class="back-btn"
+            onclick="backToBriefing()">
+            ← BACK
+        </button>
+
+        <button class="primary-btn"
+            onclick="startInvestigation()">
+            BEGIN INVESTIGATION
+        </button>
+
+    </div>
+</section>
+
+
+<!-- ================================== -->
+<!-- PASSWORD INVESTIGATION -->
+<!-- ================================== -->
+
+<section id="passwordScreen" class="screen">
+    <div class="investigation-panel">
+
+        <div class="top-status">
+
+            <span>CASE 404 / PASSWORD INVESTIGATION</span>
+
+            <span class="timer-box">
+                TIME: <span id="timer">00:00</span>
+            </span>
+
+        </div>
+
+        <p class="eyebrow">DIGITAL ACCESS REQUIRED</p>
+        <h2>FIND THE PASSWORD</h2>
+
+        <p class="muted">
+            Examine the clues left behind by Elena.
+        </p>
+
+        <div class="clue-grid">
+
+            <button class="clue-card" onclick="openClue(0)">
+                <span>01</span>
+                <h3>Personal Note</h3>
+                <p>Something about an important date.</p>
+                <small>CLICK TO EXAMINE</small>
+            </button>
+
+            <button class="clue-card" onclick="openClue(1)">
+                <span>02</span>
+                <h3>Calendar Entry</h3>
+                <p>A date that holds meaning.</p>
+                <small>CLICK TO EXAMINE</small>
+            </button>
+
+            <button class="clue-card" onclick="openClue(2)">
+                <span>03</span>
+                <h3>Old Reminder</h3>
+                <p>A message about remembering.</p>
+                <small>CLICK TO EXAMINE</small>
+            </button>
+
+        </div>
+
+        <div class="password-box">
+
+            <label for="passwordInput">
+                ENTER COMPUTER PASSWORD
+            </label>
+
+            <input
+                type="text"
+                id="passwordInput"
+                placeholder="Enter 4-digit password"
+                maxlength="4"
+                inputmode="numeric"
+                autocomplete="off"
+            >
+
+            <button class="primary-btn"
+                onclick="checkPassword()">
+                UNLOCK COMPUTER
+            </button>
+
+            <p id="passwordFeedback" class="error-message"></p>
+
+        </div>
+
+        <button class="hint-btn" onclick="useHint()">
+            REQUEST A HINT (-5 POINTS)
+        </button>
+
+        <p class="score-display">
+            CURRENT SCORE:
+            <span id="currentScore">100</span>
+        </p>
+
+        <button class="back-btn"
+            onclick="backToMission()">
+            ← BACK TO MISSION
+        </button>
+
+    </div>
+</section>
+
+
+<!-- ================================== -->
+<!-- CLUE MODAL -->
+<!-- ================================== -->
+
+<div id="clueModal" class="modal">
+    <div class="modal-content">
+
+        <button class="close-btn" onclick="closeClue()">
+            ×
+        </button>
+
+        <p class="eyebrow">RECOVERED CLUE</p>
+        <h2 id="clueTitle">PERSONAL NOTE</h2>
+
+        <div class="document-paper">
+            <p id="clueText"></p>
+        </div>
+
+        <button class="primary-btn" onclick="closeClue()">
+            CLOSE CLUE
+        </button>
+
+    </div>
+</div>
+
+
+<!-- ================================== -->
+<!-- COMPUTER DESKTOP -->
+<!-- ================================== -->
+
+<section id="computerScreen" class="screen computer-screen">
+
+    <header class="computer-header">
+
+        <div class="computer-brand">
+            <span class="online-dot"></span>
+            ELENA'S PERSONAL COMPUTER
+        </div>
+
+        <div class="computer-navigation">
+
+            <button class="nav-btn"
+                onclick="backToInvestigation()">
+                ← BACK
+            </button>
+
+            <button class="nav-btn main-menu-btn"
+                onclick="returnToMainMenu()">
+                MAIN MENU
+            </button>
+
+            <span id="desktopClock">00:00</span>
+
+        </div>
+    </header>
+
+
+    <div class="desktop-content">
+
+        <div class="desktop-heading">
+
+            <p class="eyebrow">USER ACCOUNT: ELENA</p>
+            <h2>PERSONAL DESKTOP</h2>
+
+            <p class="muted">Welcome back, Elena.</p>
+
+            <p class="muted">
+                Select an application to explore its contents.
+            </p>
+
+        </div>
+
+
+        <div class="app-grid">
+
+            <button class="app-icon" onclick="openApp('files')">
+                <span>📁</span>
+                <small>Files</small>
+            </button>
+
+            <button class="app-icon" onclick="openApp('photos')">
+                <span>🖼️</span>
+                <small>Photos</small>
+            </button>
+
+            <button class="app-icon" onclick="openApp('messages')">
+                <span>✉️</span>
+                <small>Messages</small>
+            </button>
+
+            <button class="app-icon" onclick="openApp('notes')">
+                <span>📝</span>
+                <small>Notes</small>
+            </button>
+
+            <button class="app-icon" onclick="openApp('history')">
+                <span>🌐</span>
+                <small>Browser History</small>
+            </button>
+
+        </div>
+
+
+        <div class="desktop-footer">
+            <span>ELENA-PC / SYSTEM ONLINE</span>
+            <span>PRIVATE USER ACCOUNT</span>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ================================== -->
+<!-- APPLICATION WINDOW -->
+<!-- ================================== -->
+
+<div id="appWindow" class="app-window">
+
+    <div class="app-window-header">
+
+        <h3 id="appTitle">FILES</h3>
+
+        <button class="close-btn" onclick="closeApp()">
+            ×
+        </button>
+
+    </div>
+
+    <div id="appContent" class="app-content"></div>
+
+</div>
+
+
+<!-- ================================== -->
+<!-- NOTIFICATION -->
+<!-- ================================== -->
+
+<div id="notification" class="notification"></div>
+
+
+<!-- JAVASCRIPT -->
+<script src="script.js"></script>
+
+</body>
+</html>

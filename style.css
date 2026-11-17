@@ -1,0 +1,1159 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* =====================================
+   ROOT VARIABLES
+===================================== */
+
+:root {
+    --bg: #090a0d;
+    --panel: #121317;
+    --panel-light: #191a20;
+    --red: #8d252b;
+    --red-light: #c34449;
+    --text: #e7e4e1;
+    --muted: #99979a;
+    --border: #343036;
+}
+
+/* =====================================
+   RESET AND GENERAL STYLING
+===================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* =====================================
+   BACKGROUND EFFECT
+===================================== */
+
+.ambient {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse at 50% 40%, rgba(103, 22, 28, .18), transparent 55%),
+        radial-gradient(ellipse at 10% 90%, rgba(60, 20, 24, .13), transparent 45%),
+        #090a0d;
+}
+
+/* =====================================
+   SCREEN TRANSITIONS
+===================================== */
+
+.screen {
+    display: none;
+    min-height: 100vh;
+    width: 100%;
+    padding: 35px 20px;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn .5s ease;
+}
+
+.screen.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =====================================
+   TEXT STYLING
+===================================== */
+
+.eyebrow {
+    color: #b65b5e;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    margin-bottom: 18px;
+}
+
+.muted {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+/* =====================================
+   START SCREEN
+===================================== */
+
+.start-content {
+    width: 100%;
+    max-width: 700px;
+    text-align: center;
+    padding: 35px 15px;
+}
+
+.case-stamp {
+    display: inline-block;
+    border: 1px solid #763238;
+    color: #c4777a;
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 8px 15px;
+    margin-bottom: 22px;
+    transform: rotate(-2deg);
+}
+
+.start-content h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(65px, 12vw, 120px);
+    line-height: 1;
+    letter-spacing: 5px;
+    color: #f1eeee;
+}
+
+.start-content h1 span {
+    color: #a72c34;
+    text-shadow: 0 0 25px rgba(167, 44, 52, .3);
+}
+
+.start-content h2 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(23px, 5vw, 42px);
+    letter-spacing: 9px;
+    margin-top: 15px;
+    font-weight: 400;
+}
+
+.tagline {
+    color: var(--muted);
+    font-style: italic;
+    letter-spacing: 2px;
+    margin: 25px 0 40px;
+}
+
+.small-text {
+    color: #68666b;
+    font-size: 10px;
+    letter-spacing: 2px;
+    margin-top: 28px;
+}
+
+/* =====================================
+   PRIMARY BUTTON
+===================================== */
+
+.primary-btn {
+    display: block;
+    width: 100%;
+    max-width: 340px;
+    margin: 25px auto 0;
+    padding: 16px 22px;
+    border: 1px solid #a13b40;
+    border-radius: 3px;
+    background: linear-gradient(135deg, #78252b, #46171c);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    transition: .3s;
+}
+
+.primary-btn:hover {
+    background: #a33139;
+    box-shadow: 0 0 25px rgba(163, 49, 57, .25);
+    transform: translateY(-2px);
+}
+
+.primary-btn:active {
+    transform: scale(.98);
+}
+
+/* =====================================
+   PANELS
+===================================== */
+
+.panel,
+.investigation-panel {
+    width: 100%;
+    max-width: 720px;
+    padding: clamp(22px, 5vw, 45px);
+    background: rgba(18, 19, 23, .96);
+    border: 1px solid var(--border);
+    border-top: 2px solid #782b30;
+    box-shadow: 0 15px 60px rgba(0, 0, 0, .4);
+}
+
+.panel h2,
+.investigation-panel h2 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(21px, 4vw, 30px);
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+.panel > p:not(.eyebrow):not(.warning):not(.error-message) {
+    color: #c1bdc0;
+    font-size: 14px;
+    line-height: 1.9;
+    margin: 15px 0;
+}
+
+/* =====================================
+   INSTRUCTIONS
+===================================== */
+
+.instruction-list {
+    margin: 25px 0;
+}
+
+.instruction-list p {
+    padding: 12px 10px;
+    border-bottom: 1px solid #29282d;
+    color: #c6c2c5;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.instruction-list span {
+    color: #c34b51;
+    font-weight: 700;
+    margin-right: 8px;
+}
+
+/* =====================================
+   WARNING BOX
+===================================== */
+
+.warning {
+    background: rgba(118, 31, 37, .13);
+    border-left: 3px solid #9b343a;
+    padding: 14px;
+    color: #d58b8e;
+    font-size: 12px;
+    line-height: 1.8;
+    margin: 22px 0;
+}
+
+/* =====================================
+   INPUT FIELDS
+===================================== */
+
+input {
+    display: block;
+    width: 100%;
+    background: #0b0c10;
+    color: white;
+    border: 1px solid #40383d;
+    border-radius: 3px;
+    padding: 15px;
+    margin-top: 20px;
+    outline: none;
+    transition: .3s;
+}
+
+input:focus {
+    border-color: #a63a40;
+    box-shadow: 0 0 12px rgba(166, 58, 64, .15);
+}
+
+input::placeholder {
+    color: #77747a;
+}
+
+/* =====================================
+   ERROR MESSAGE
+===================================== */
+
+.error-message {
+    color: #e16c72;
+    font-size: 12px;
+    text-align: center;
+    margin-top: 15px;
+    min-height: 16px;
+}
+
+/* =====================================
+   CASE BRIEFING
+===================================== */
+
+.briefing-panel {
+    max-width: 800px;
+}
+
+.victim-profile {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    padding: 20px;
+    margin: 25px 0;
+    background: #0c0d11;
+    border: 1px solid #3b3034;
+}
+
+.victim-photo {
+    width: 155px;
+    height: 190px;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(.76) contrast(1.05);
+    border: 2px solid #673238;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.victim-info h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 17px;
+    color: #e7dfe0;
+    margin-bottom: 15px;
+}
+
+.victim-info p {
+    font-size: 11px;
+    color: #a9a3a6;
+    letter-spacing: 1px;
+    margin: 9px 0;
+}
+
+.case-description {
+    line-height: 1.9;
+    font-size: 14px;
+    color: #c5c0c3;
+}
+
+/* =====================================
+   MISSION INTRODUCTION
+===================================== */
+
+.mission-icon {
+    font-size: 60px;
+    color: #a43d44;
+    text-align: center;
+    margin: 30px 0;
+}
+
+/* =====================================
+   PASSWORD INVESTIGATION
+===================================== */
+
+.investigation-panel {
+    max-width: 900px;
+}
+
+.top-status {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #363137;
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+    color: #b0a9ae;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+}
+
+.timer-box {
+    color: #d45a60;
+}
+
+/* =====================================
+   CLUE CARDS
+===================================== */
+
+.clue-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.clue-card {
+    text-align: left;
+    min-height: 165px;
+    background: #17171c;
+    border: 1px solid #393238;
+    padding: 18px;
+    color: var(--text);
+    transition: .3s;
+}
+
+.clue-card:hover {
+    border-color: #a43d44;
+    background: #21171b;
+    transform: translateY(-3px);
+}
+
+.clue-card > span {
+    color: #c64c52;
+    font-size: 12px;
+}
+
+.clue-card h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    margin: 15px 0 8px;
+}
+
+.clue-card p {
+    font-size: 11px;
+    color: #aaa3a7;
+    line-height: 1.6;
+}
+
+.clue-card small {
+    display: block;
+    color: #985056;
+    font-size: 9px;
+    letter-spacing: 1px;
+    margin-top: 14px;
+}
+
+/* =====================================
+   PASSWORD BOX
+===================================== */
+
+.password-box {
+    border: 1px solid #383138;
+    background: #0d0e12;
+    padding: 22px;
+}
+
+.password-box label {
+    display: block;
+    color: #c7bfc3;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+.password-box input {
+    text-align: center;
+    letter-spacing: 12px;
+    font-size: 23px;
+    max-width: 350px;
+    margin: 20px auto;
+}
+
+/* =====================================
+   HINT BUTTON
+===================================== */
+
+.hint-btn {
+    display: block;
+    margin: 20px auto;
+    padding: 12px 18px;
+    background: transparent;
+    border: 1px solid #765056;
+    color: #cf8589;
+    font-size: 10px;
+    letter-spacing: 1px;
+    transition: .3s;
+}
+
+.hint-btn:hover {
+    background: #321b20;
+    border-color: #b34a52;
+}
+
+/* =====================================
+   SCORE DISPLAY
+===================================== */
+
+.score-display {
+    text-align: center;
+    color: #aaa4a8;
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-top: 20px;
+}
+
+.score-display span {
+    color: #e1b1a1;
+    font-weight: 700;
+}
+
+/* =====================================
+   BACK BUTTONS
+===================================== */
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 130px;
+    padding: 13px 22px;
+    margin: 15px 8px 0 0;
+    background: transparent;
+    color: #c9bfc2;
+    border: 1px solid #654047;
+    border-radius: 3px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+.back-btn:hover {
+    background: #542329;
+    border-color: #b34a52;
+    color: #ffffff;
+    transform: translateX(-3px);
+    box-shadow: 0 0 15px rgba(163, 49, 57, .15);
+}
+
+.back-btn:active {
+    transform: scale(.97);
+}
+
+/* =====================================
+   NAVIGATION BUTTON CONTAINER
+===================================== */
+
+.navigation-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.navigation-buttons .primary-btn {
+    margin: 15px 0 0;
+}
+
+/* =====================================
+   MODALS
+===================================== */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 20;
+    inset: 0;
+    background: rgba(0, 0, 0, .85);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    width: 100%;
+    max-width: 500px;
+    padding: 30px;
+    background: #17171c;
+    border: 1px solid #704046;
+    position: relative;
+    animation: fadeIn .3s ease;
+}
+
+.modal-content h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: #d0a1a3;
+    font-size: 28px;
+    line-height: 1;
+    padding: 4px 10px;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #ffffff;
+}
+
+.modal-content > .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+}
+
+/* =====================================
+   DOCUMENT PAPER
+===================================== */
+
+.document-paper {
+    background: #e4ddd0;
+    color: #28221f;
+    padding: 25px;
+    min-height: 130px;
+    font-family: Georgia, serif;
+    line-height: 1.9;
+    font-size: 14px;
+}
+
+/* =====================================
+   COMPUTER DESKTOP
+===================================== */
+
+.computer-screen {
+    display: none;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 0;
+    background:
+        radial-gradient(ellipse at 50% 50%, rgba(94, 27, 33, .25), transparent 70%),
+        #101115;
+}
+
+.computer-screen.active {
+    display: flex;
+}
+
+/* =====================================
+   COMPUTER HEADER
+===================================== */
+
+.computer-header {
+    width: 100%;
+    min-height: 55px;
+    padding: 15px 25px;
+    background: #0b0c10;
+    border-bottom: 1px solid #393239;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #d3ced0;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.online-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    background: #64a879;
+    border-radius: 50%;
+    margin-right: 8px;
+    box-shadow: 0 0 8px #64a879;
+}
+
+/* =====================================
+   COMPUTER NAVIGATION
+===================================== */
+
+.computer-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.nav-btn {
+    background: transparent;
+    color: #c9bfc2;
+    border: 1px solid #654047;
+    border-radius: 3px;
+    padding: 9px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: .3s;
+}
+
+.nav-btn:hover {
+    background: #542329;
+    border-color: #b34a52;
+    color: white;
+}
+
+.main-menu-btn {
+    background: #542329;
+    border-color: #854047;
+    color: white;
+}
+
+.main-menu-btn:hover {
+    background: #96343d;
+    border-color: #c34449;
+}
+
+/* =====================================
+   DESKTOP CONTENT
+===================================== */
+
+.desktop-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 900px;
+    padding: 45px 20px;
+    margin: auto;
+}
+
+.desktop-heading {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.desktop-heading h2 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(25px, 5vw, 40px);
+    letter-spacing: 3px;
+    margin: 15px 0;
+}
+
+/* =====================================
+   APPLICATION GRID
+===================================== */
+
+.app-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(75px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 650px;
+}
+
+.app-icon {
+    background: rgba(25, 25, 31, .85);
+    border: 1px solid #39343a;
+    border-radius: 5px;
+    color: white;
+    min-height: 120px;
+    padding: 20px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    transition: .3s;
+}
+
+.app-icon:hover {
+    background: #29191e;
+    border-color: #a13b42;
+    transform: translateY(-5px);
+}
+
+.app-icon span {
+    font-size: 35px;
+}
+
+.app-icon small {
+    color: #c9c2c5;
+    font-size: 11px;
+}
+
+/* =====================================
+   DESKTOP FOOTER
+===================================== */
+
+.desktop-footer {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+    border-top: 1px solid #343038;
+    padding-top: 20px;
+    margin-top: 65px;
+    color: #777178;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+}
+
+/* =====================================
+   APPLICATION WINDOW
+===================================== */
+
+.app-window {
+    display: none;
+    position: fixed;
+    z-index: 15;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(750px, calc(100% - 30px));
+    max-height: 80vh;
+    overflow: hidden;
+    background: #15161b;
+    border: 1px solid #6b3b42;
+    box-shadow: 0 20px 80px rgba(0, 0, 0, .8);
+}
+
+.app-window.show {
+    display: block;
+    animation: fadeIn .25s ease;
+}
+
+/* =====================================
+   APPLICATION WINDOW HEADER
+===================================== */
+
+.app-window-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 18px;
+    background: #242127;
+    border-bottom: 1px solid #44333a;
+}
+
+.app-window-header h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+}
+
+/* =====================================
+   APPLICATION CONTENT
+===================================== */
+
+.app-content {
+    padding: 22px;
+    overflow-y: auto;
+    max-height: calc(80vh - 55px);
+    color: #d6d0d3;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.app-content h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    color: #dba1a4;
+    margin-bottom: 15px;
+}
+
+.app-content h4 {
+    color: #e1c1c0;
+    margin: 15px 0 5px;
+}
+
+.app-item {
+    padding: 13px;
+    background: #1d1c22;
+    border: 1px solid #373138;
+    margin-bottom: 10px;
+    border-radius: 3px;
+}
+
+.app-item small {
+    display: block;
+    color: #a77b80;
+    margin-top: 5px;
+}
+
+/* =====================================
+   PHOTO GALLERY - UPDATED FOR 10 PHOTOS
+===================================== */
+
+.photo-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.photo-item {
+    min-width: 0;
+    padding: 9px;
+    background: #1d1c22;
+    border: 1px solid #44343a;
+    border-radius: 4px;
+    transition: .3s ease;
+}
+
+.photo-item:hover {
+    border-color: #a43d44;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .3);
+}
+
+.photo-item img {
+    display: block;
+    width: 100%;
+    height: 175px;
+    object-fit: cover;
+    object-position: center;
+    border: 1px solid #6b4146;
+    filter: brightness(.85);
+    transition: .3s ease;
+}
+
+.photo-item:hover img {
+    filter: brightness(1);
+}
+
+.photo-caption {
+    color: #d0a2a5;
+    font-size: 10px;
+    letter-spacing: 1px;
+    margin-top: 9px;
+    text-align: center;
+}
+
+.photo-description {
+    color: #999197;
+    font-size: 10px;
+    line-height: 1.5;
+    text-align: center;
+    margin-top: 4px;
+}
+
+/* =====================================
+   APPLICATION NOTICE
+===================================== */
+
+.app-notice {
+    padding: 12px;
+    border-left: 2px solid #9b4148;
+    background: #21191d;
+    color: #d3b1b3;
+    margin-top: 15px;
+}
+
+/* =====================================
+   NOTIFICATION
+===================================== */
+
+.notification {
+    position: fixed;
+    z-index: 30;
+    bottom: 25px;
+    right: 25px;
+    max-width: 320px;
+    padding: 15px 20px;
+    background: #281a1e;
+    border: 1px solid #91464c;
+    color: #e4c6c7;
+    font-size: 12px;
+    opacity: 0;
+    transform: translateY(15px);
+    pointer-events: none;
+    transition: .3s;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =====================================
+   TABLET AND MOBILE RESPONSIVENESS
+===================================== */
+
+@media (max-width: 650px) {
+    .screen {
+        padding: 20px 12px;
+    }
+
+    .start-content h2 {
+        letter-spacing: 5px;
+    }
+
+    .panel,
+    .investigation-panel {
+        padding: 23px 17px;
+    }
+
+    .clue-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .clue-card {
+        min-height: 125px;
+    }
+
+    .victim-profile {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .victim-photo {
+        width: 160px;
+        height: 195px;
+    }
+
+    .victim-info h3 {
+        font-size: 15px;
+    }
+
+    .app-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .app-icon {
+        min-height: 105px;
+    }
+
+    .app-icon span {
+        font-size: 30px;
+    }
+
+    .desktop-content {
+        padding: 30px 15px;
+    }
+
+    .desktop-heading {
+        margin-bottom: 30px;
+    }
+
+    .desktop-footer {
+        margin-top: 45px;
+    }
+
+    .computer-header {
+        padding: 13px;
+        font-size: 9px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .computer-navigation {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .nav-btn {
+        padding: 9px 10px;
+        font-size: 9px;
+    }
+
+    .photo-gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .photo-item img {
+        height: 155px;
+    }
+
+    .notification {
+        left: 15px;
+        right: 15px;
+        bottom: 15px;
+        max-width: none;
+    }
+
+    .navigation-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .navigation-buttons .back-btn,
+    .navigation-buttons .primary-btn {
+        width: 100%;
+        max-width: 100%;
+        margin: 8px 0;
+    }
+
+    .back-btn {
+        width: 100%;
+        margin-right: 0;
+    }
+}
+
+/* =====================================
+   SMALL MOBILE DEVICES
+===================================== */
+
+@media (max-width: 360px) {
+    .app-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .start-content h1 {
+        font-size: 57px;
+    }
+
+    .start-content h2 {
+        font-size: 21px;
+        letter-spacing: 3px;
+    }
+
+    .top-status {
+        font-size: 9px;
+    }
+
+    .photo-gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .photo-item img {
+        height: 210px;
+    }
+}
+
+/* =====================================
+   ACCESSIBILITY
+===================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
+}
+
+/* =====================================
+   CASE DATE
+===================================== */
+
+.case-date {
+    margin-top: 20px;
+    padding: 15px;
+    background: #1c1518;
+    border-left: 3px solid #c73545;
+}
+
+.case-date p {
+    color: #c9bfc1;
+    font-size: 13px;
+    letter-spacing: 1px;
+    margin: 8px 0;
+}
+
+.case-date strong {
+    color: #e58d91;
+}
