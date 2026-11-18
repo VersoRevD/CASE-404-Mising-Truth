@@ -1157,3 +1157,117 @@ input::placeholder {
 .case-date strong {
     color: #e58d91;
 }
+
+
+/* =====================================
+   GAME OVER SCREEN
+===================================== */
+
+#gameOverOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            rgba(100, 20, 27, .25),
+            transparent 65%
+        ),
+        rgba(5, 5, 8, .98);
+
+    text-align: center;
+
+    animation: gameOverAppear .5s ease forwards;
+}
+
+.game-over-content {
+    width: 100%;
+    max-width: 650px;
+    animation: gameOverContent .7s ease forwards;
+}
+
+.game-over-label {
+    color: #a75b60;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    margin-bottom: 25px;
+}
+
+.game-over-content h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(38px, 9vw, 75px);
+    font-weight: 800;
+    letter-spacing: 8px;
+    color: #c34449;
+
+    text-shadow:
+        0 0 15px rgba(195, 68, 73, .5),
+        0 0 40px rgba(195, 68, 73, .2);
+
+    animation: gameOverPulse 1s ease-in-out infinite alternate;
+}
+
+.game-over-message {
+    color: #d0c6c8;
+    font-size: 13px;
+    letter-spacing: 1px;
+    margin-top: 25px;
+}
+
+.game-over-subtitle {
+    color: #8e777b;
+    font-size: 9px;
+    letter-spacing: 2px;
+    margin-top: 35px;
+    animation: gameOverBlink 1.2s ease-in-out infinite;
+}
+
+@keyframes gameOverAppear {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes gameOverContent {
+    from {
+        opacity: 0;
+        transform: scale(.92);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes gameOverPulse {
+    from {
+        opacity: .65;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes gameOverBlink {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .35;
+    }
+}

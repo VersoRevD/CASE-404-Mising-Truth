@@ -2,6 +2,8 @@
 // ==========================================
 // CASE 404: MISSING TRUTH
 // COMPLETE GAME JAVASCRIPT
+// TIMELINE: JANUARY - JULY 10, 2026
+// AUTOMATIC GAME OVER SYSTEM
 // ==========================================
 
 
@@ -16,9 +18,11 @@ let timerInterval = null;
 let timerRunning = false;
 let hintCount = 0;
 let unlocked = false;
+let gameOver = false;
+let gameOverTimeout = null;
 let notificationTimeout = null;
 
-const correctPassword = "2108";
+const correctPassword = "0907";
 
 
 // ==========================================
@@ -70,8 +74,9 @@ function backToMission() {
 
 function backToInvestigation() {
 
-    closeApp();
+    if (gameOver) return;
 
+    closeApp();
     showScreen("passwordScreen");
 
     showNotification("Returned to Password Investigation.");
@@ -84,6 +89,8 @@ function backToInvestigation() {
 
 function registerInvestigator() {
 
+    if (gameOver) return;
+
     const nameInput = document.getElementById("investigatorName");
     const error = document.getElementById("registrationError");
 
@@ -92,14 +99,12 @@ function registerInvestigator() {
     if (name === "") {
 
         error.textContent = "Please enter your investigator name.";
-
         nameInput.focus();
 
         return;
     }
 
     investigator = name;
-
     error.textContent = "";
 
     showNotification(
@@ -116,6 +121,8 @@ function registerInvestigator() {
 
 function startInvestigation() {
 
+    if (gameOver) return;
+
     if (!timerRunning && !unlocked) {
 
         if (timerInterval) {
@@ -129,10 +136,9 @@ function startInvestigation() {
 
         timerInterval = setInterval(() => {
 
-            if (!timerRunning) return;
+            if (!timerRunning || gameOver) return;
 
             seconds++;
-
             updateTimer();
 
         }, 1000);
@@ -147,7 +153,6 @@ function startInvestigation() {
 function updateTimer() {
 
     const minutes = Math.floor(seconds / 60);
-
     const remainingSeconds = seconds % 60;
 
     const formattedTime =
@@ -156,7 +161,6 @@ function updateTimer() {
         String(remainingSeconds).padStart(2, "0");
 
     const timer = document.getElementById("timer");
-
     const desktopClock = document.getElementById("desktopClock");
 
     if (timer) {
@@ -174,11 +178,145 @@ function stopTimer() {
     timerRunning = false;
 
     if (timerInterval) {
-
         clearInterval(timerInterval);
-
         timerInterval = null;
     }
+}
+
+
+// ==========================================
+// AUTOMATIC GAME OVER SYSTEM
+// ==========================================
+
+function triggerGameOver() {
+
+    if (gameOver || score > 0) return;
+
+    gameOver = true;
+    score = 0;
+
+    stopTimer();
+    closeClue();
+    closeApp();
+
+    const notification = document.getElementById("notification");
+
+    if (notification) {
+        notification.classList.remove("show");
+    }
+
+    const currentScore = document.getElementById("currentScore");
+
+    if (currentScore) {
+        currentScore.textContent = "0";
+    }
+
+    const oldOverlay = document.getElementById("gameOverOverlay");
+
+    if (oldOverlay) {
+        oldOverlay.remove();
+    }
+
+    const overlay = document.createElement("div");
+
+    overlay.id = "gameOverOverlay";
+
+    overlay.innerHTML = `
+        <div class="game-over-content">
+            <p class="game-over-label">
+                CASE 404 / INVESTIGATION TERMINATED
+            </p>
+
+            <h1>GAME OVER</h1>
+
+            <p class="game-over-message">
+                You have run out of investigation points.
+            </p>
+
+            <p class="game-over-subtitle">
+                RETURNING TO INVESTIGATION GUIDELINES...
+            </p>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    gameOverTimeout = setTimeout(() => {
+
+        overlay.remove();
+
+        resetAfterGameOver();
+
+        showScreen("instructionsScreen");
+
+    }, 3000);
+}
+
+
+// ==========================================
+// RESET AFTER GAME OVER
+// ==========================================
+
+function resetAfterGameOver() {
+
+    gameOver = false;
+
+    investigator = "";
+    score = 100;
+    seconds = 0;
+    hintCount = 0;
+    unlocked = false;
+
+    stopTimer();
+
+    const investigatorName =
+        document.getElementById("investigatorName");
+
+    const registrationError =
+        document.getElementById("registrationError");
+
+    const passwordInput =
+        document.getElementById("passwordInput");
+
+    const passwordFeedback =
+        document.getElementById("passwordFeedback");
+
+    const currentScore =
+        document.getElementById("currentScore");
+
+    if (investigatorName) {
+        investigatorName.value = "";
+    }
+
+    if (registrationError) {
+        registrationError.textContent = "";
+    }
+
+    if (passwordInput) {
+        passwordInput.value = "";
+    }
+
+    if (passwordFeedback) {
+        passwordFeedback.textContent = "";
+        passwordFeedback.style.color = "";
+    }
+
+    if (currentScore) {
+        currentScore.textContent = "100";
+    }
+
+    updateTimer();
+
+    closeClue();
+    closeApp();
+
+    const notification = document.getElementById("notification");
+
+    if (notification) {
+        notification.classList.remove("show");
+    }
+
+    clearTimeout(notificationTimeout);
 }
 
 
@@ -191,13 +329,13 @@ const clues = [
     {
         title: "PERSONAL NOTE",
 
-        text: `"August has always been special to me. I never want to forget the day that changed my life. 21.08. I wish I could go back."`
+        text: `"July has become an important month to me. July 9 is a date I never want to forget. I wish I could go back to that day."`
     },
 
     {
         title: "CALENDAR ENTRY",
 
-        text: `"AUGUST 21 — A day I will always remember. No matter what happens, this date will stay with me."`
+        text: `"JULY 9 — A day I will always remember. No matter what happens, this date will stay with me."`
     },
 
     {
@@ -210,6 +348,8 @@ const clues = [
 
 
 function openClue(index) {
+
+    if (gameOver) return;
 
     const clue = clues[index];
 
@@ -245,14 +385,14 @@ const hints = [
 
     "HINT 3: The password contains four digits. Enter the day first, followed by the month.",
 
-    "HINT 4: The date is August 21. Remember the required order."
+    "HINT 4: The date is July 9. Remember the required order."
 
 ];
 
 
 function useHint() {
 
-    if (unlocked) return;
+    if (unlocked || gameOver) return;
 
     score = Math.max(0, score - 5);
 
@@ -260,6 +400,11 @@ function useHint() {
 
     if (currentScore) {
         currentScore.textContent = score;
+    }
+
+    if (score <= 0) {
+        triggerGameOver();
+        return;
     }
 
     const hintIndex = Math.min(
@@ -279,8 +424,9 @@ function useHint() {
 
 function checkPassword() {
 
-    const input = document.getElementById("passwordInput");
+    if (gameOver) return;
 
+    const input = document.getElementById("passwordInput");
     const feedback = document.getElementById("passwordFeedback");
 
     if (!input || !feedback) return;
@@ -292,7 +438,6 @@ function checkPassword() {
     if (enteredPassword === "") {
 
         feedback.textContent = "Please enter a password.";
-
         input.focus();
 
         return;
@@ -303,10 +448,10 @@ function checkPassword() {
         !/^\d{4}$/.test(enteredPassword)
     ) {
 
-        feedback.textContent = "Password must contain exactly 4 digits.";
+        feedback.textContent =
+            "Password must contain exactly 4 digits.";
 
         input.value = "";
-
         input.focus();
 
         return;
@@ -323,17 +468,24 @@ function checkPassword() {
 
         feedback.style.color = "#72b58b";
 
-        feedback.textContent = "ACCESS GRANTED. COMPUTER UNLOCKED.";
+        feedback.textContent =
+            "ACCESS GRANTED. COMPUTER UNLOCKED.";
 
-        showNotification("Password correct! Computer unlocked.");
+        showNotification(
+            "Password correct! Computer unlocked."
+        );
 
         setTimeout(() => {
+
+            if (gameOver) return;
 
             closeApp();
 
             showScreen("computerScreen");
 
-            showNotification("Welcome to Elena's personal computer.");
+            showNotification(
+                "Welcome to Elena's personal computer."
+            );
 
         }, 1000);
 
@@ -346,7 +498,8 @@ function checkPassword() {
 
         score = Math.max(0, score - 10);
 
-        const currentScore = document.getElementById("currentScore");
+        const currentScore =
+            document.getElementById("currentScore");
 
         if (currentScore) {
             currentScore.textContent = score;
@@ -359,10 +512,13 @@ function checkPassword() {
 
         input.value = "";
 
+        if (score <= 0) {
+            triggerGameOver();
+            return;
+        }
+
         input.focus();
-
     }
-
 }
 
 
@@ -385,53 +541,31 @@ const appData = {
             <h3>ELENA'S PERSONAL FILES</h3>
 
             <div class="app-item">
-
                 📄 <strong>Personal Information.txt</strong>
-
-                <small>Last modified: August 20</small>
-
+                <small>Last modified: June 12, 2026</small>
                 <p>A document containing Elena's personal details.</p>
-
             </div>
 
-
             <div class="app-item">
-
                 📄 <strong>Journal Entry.doc</strong>
-
-                <small>Last modified: August 21</small>
-
-                <p>A personal journal entry saved before her death.</p>
-
+                <small>Last modified: July 9, 2026</small>
+                <p>A personal journal entry saved one day before her death.</p>
             </div>
 
-
             <div class="app-item">
-
                 📄 <strong>Important Documents.pdf</strong>
-
-                <small>Last modified: August 18</small>
-
+                <small>Last modified: June 28, 2026</small>
                 <p>Some documents about an unknown individual.</p>
-
             </div>
-
 
             <div class="app-item">
-
                 🔒 <strong>hidden_404.dat</strong>
-
                 <small>FILE STATUS: RESTRICTED</small>
-
                 <p>A suspicious file that may contain important information.</p>
-
             </div>
-
 
             <div class="app-notice">
-
                 SYSTEM NOTE: Some files may contain important evidence.
-
             </div>
 
         `
@@ -439,7 +573,7 @@ const appData = {
 
 
     // --------------------------------------
-    // PHOTOS - 10 PERSONAL PHOTOS
+    // PHOTOS - 11 PERSONAL PHOTOS
     // --------------------------------------
 
     photos: {
@@ -453,75 +587,101 @@ const appData = {
             <div class="photo-gallery">
 
                 <div class="photo-item">
-                    <img src="assets/images/bedroom.png" alt="Personal photo">
+                    <img
+                        src="assets/images/bedroom.png"
+                        alt="Elena's bedroom"
+                    >
                     <p class="photo-caption">MAY 6, 2026</p>
                 </div>
 
-
                 <div class="photo-item">
-                    <img src="assets/images/dog.png" alt="Personal photo">
+                    <img
+                        src="assets/images/dog.png"
+                        alt="Elena's dog"
+                    >
                     <p class="photo-caption">JUNE 14, 2026</p>
                 </div>
 
-
                 <div class="photo-item">
-                    <img src="assets/images/elenapic.png" alt="Personal photo">
+                    <img
+                        src="assets/images/elenapic.png"
+                        alt="Elena's personal photo"
+                    >
                     <p class="photo-caption">JUNE 22, 2026</p>
                 </div>
 
-
                 <div class="photo-item">
-                    <img src="assets/images/friends.png" alt="Personal photo">
+                    <img
+                        src="assets/images/friends.png"
+                        alt="Elena with her friends"
+                    >
                     <p class="photo-caption">JUNE 30, 2026</p>
                 </div>
 
-
                 <div class="photo-item">
-                    <img src="assets/images/stalker.png" alt="Personal photo">
+                    <img
+                        src="assets/images/stalker.png"
+                        alt="A suspicious figure"
+                    >
                     <p class="photo-caption">JULY 1, 2026</p>
                 </div>
 
+                <!-- NOTE IMAGE -->
 
                 <div class="photo-item">
-                    <img src="assets/images/friends1.png" alt="Personal photo">
+                    <img
+                        src="assets/images/note.png"
+                        alt="A handwritten message"
+                    >
+                    <p class="photo-caption">JULY 1, 2026</p>
+                </div>
+
+                <div class="photo-item">
+                    <img
+                        src="assets/images/friends1.png"
+                        alt="Elena with her friends"
+                    >
                     <p class="photo-caption">JULY 5, 2026</p>
                 </div>
 
-
                 <div class="photo-item">
-                    <img src="assets/images/hallway.png" alt="Personal photo">
+                    <img
+                        src="assets/images/hallway.png"
+                        alt="A dark hallway"
+                    >
                     <p class="photo-caption">JULY 7, 2026</p>
                 </div>
 
-
                 <div class="photo-item">
-                    <img src="assets/images/guy.png" alt="Personal photo">
+                    <img
+                        src="assets/images/guy.png"
+                        alt="A mysterious man"
+                    >
                     <p class="photo-caption">JULY 8, 2026</p>
                 </div>
 
-
                 <div class="photo-item">
-                    <img src="assets/images/photos.png" alt="Personal photo">
+                    <img
+                        src="assets/images/photos.png"
+                        alt="A personal photo"
+                    >
                     <p class="photo-caption">JULY 9, 2026</p>
                 </div>
 
-
                 <div class="photo-item">
-                    <img src="assets/images/friends2.png" alt="Personal photo">
+                    <img
+                        src="assets/images/friends2.png"
+                        alt="Elena with her friends"
+                    >
                     <p class="photo-caption">JANUARY 7, 2026</p>
                 </div>
 
             </div>
 
-
             <div class="app-notice">
-
                 PHOTO ARCHIVE: JANUARY - JULY 2026.
-
                 LAST PHOTO SAVED: JULY 9, 2026.
-
                 BODY DISCOVERED: JULY 10, 2026.
-
             </div>
 
         `
@@ -540,52 +700,122 @@ const appData = {
 
             <h3>PRIVATE CONVERSATIONS</h3>
 
-
-            <div class="app-item">
-
-                <strong>UNKNOWN NUMBER</strong>
-
-                <small>August 20 • 9:14 PM</small>
-
-                <p>
-                    "You shouldn't have looked into something
-                    that doesn't concern you."
-                </p>
-
+            <div class="app-notice">
+                WARNING: Some conversations contain disturbing messages.
+                Sender identity could not be verified.
             </div>
 
+            <div class="app-item">
+                <strong>UNKNOWN NUMBER</strong>
+                <small>July 7 • 8:41 PM</small>
+                <p>
+                    "You should stop asking questions, Elena.
+                    Some things are better left buried.
+                    You have no idea what you're getting yourself into."
+                </p>
+            </div>
 
             <div class="app-item">
-
                 <strong>Elena</strong>
-
-                <small>August 20 • 9:18 PM</small>
-
+                <small>July 7 • 8:46 PM</small>
                 <p>
-                    "I know what happened. You can't keep hiding
-                    the truth forever."
+                    "Who is this? How do you know what I've been doing?
+                    I've already told you that I won't stay quiet.
+                    People deserve to know the truth."
                 </p>
-
             </div>
-
 
             <div class="app-item">
-
                 <strong>UNKNOWN NUMBER</strong>
-
-                <small>August 21 • 12:03 AM</small>
-
+                <small>July 7 • 8:49 PM</small>
                 <p>
-                    "This is your last warning. Delete everything."
+                    "You really think someone will believe you?
+                    I've been watching you for a long time.
+                    I know where you go, who you meet,
+                    and when you come home."
                 </p>
-
             </div>
 
+            <div class="app-item">
+                <strong>Elena</strong>
+                <small>July 8 • 10:12 PM</small>
+                <p>
+                    "I saw you again today.
+                    You were standing across the street,
+                    just watching me.
+                    Why are you doing this? What do you want from me?"
+                </p>
+            </div>
+
+            <div class="app-item">
+                <strong>UNKNOWN NUMBER</strong>
+                <small>July 8 • 10:19 PM</small>
+                <p>
+                    "You shouldn't have noticed me.
+                    I warned you to forget what you found.
+                    Delete the pictures, erase the files,
+                    and pretend none of this ever happened."
+                </p>
+            </div>
+
+            <div class="app-item">
+                <strong>Elena</strong>
+                <small>July 9 • 9:14 PM</small>
+                <p>
+                    "I know what happened.
+                    I have the evidence, and I've made copies of everything.
+                    You can't keep hiding the truth forever.
+                    If anything happens to me, someone will find out."
+                </p>
+            </div>
+
+            <div class="app-item">
+                <strong>UNKNOWN NUMBER</strong>
+                <small>July 9 • 9:18 PM</small>
+                <p>
+                    "You have no idea how much trouble you've caused.
+                    I gave you enough chances to walk away.
+                    This is your last opportunity to fix your mistake.
+                    Delete everything. Now."
+                </p>
+            </div>
+
+            <div class="app-item">
+                <strong>Elena</strong>
+                <small>July 9 • 11:36 PM</small>
+                <p>
+                    "I'm scared. I can hear someone outside my apartment.
+                    I've checked the door twice, but there's nobody there.
+                    I don't know if I'm imagining things anymore.
+                    I just want this to end."
+                </p>
+            </div>
+
+            <div class="app-item">
+                <strong>UNKNOWN NUMBER</strong>
+                <small>July 9 • 11:48 PM</small>
+                <p>
+                    "You should have listened.
+                    Check your door, Elena.
+                    You forgot to lock it."
+                </p>
+            </div>
+
+            <div class="app-item">
+                <strong>Elena</strong>
+                <small>July 9 • 11:51 PM</small>
+                <p>
+                    "HOW DO YOU KNOW THAT?
+                    Who are you?!
+                    Please, just leave me alone.
+                    I haven't told anyone where I live..."
+                </p>
+            </div>
 
             <div class="app-notice">
-
-                MESSAGE WARNING: Sender identity unavailable.
-
+                SYSTEM WARNING: No further messages were recovered
+                after July 9, 2026.
+                The sender's identity remains unknown.
             </div>
 
         `
@@ -604,47 +834,32 @@ const appData = {
 
             <h3>ELENA'S PRIVATE NOTES</h3>
 
-
             <div class="app-item">
-
-                <strong>August 18</strong>
-
+                <strong>January 15, 2026</strong>
                 <p>
                     Someone has been following me lately.
                     I don't know who I can trust anymore.
                 </p>
-
             </div>
 
-
             <div class="app-item">
-
-                <strong>August 20</strong>
-
+                <strong>May 12, 2026</strong>
                 <p>
                     I found something that could change everything.
                     I need to keep it somewhere safe.
                 </p>
-
             </div>
 
-
             <div class="app-item">
-
-                <strong>August 21</strong>
-
+                <strong>July 9, 2026</strong>
                 <p>
                     If something happens to me, I hope someone
                     finds the truth hidden in this computer.
                 </p>
-
             </div>
 
-
             <div class="app-notice">
-
-                PRIVATE NOTE: Last entry saved on August 21.
-
+                PRIVATE NOTE: Last entry saved on July 9, 2026.
             </div>
 
         `
@@ -663,48 +878,30 @@ const appData = {
 
             <h3>RECENT SEARCH HISTORY</h3>
 
-
             <div class="app-item">
-
                 🌐 <strong>How to recover deleted files</strong>
-
-                <small>August 19 • 8:30 PM</small>
-
+                <small>January 15 • 9:20 PM</small>
             </div>
 
-
             <div class="app-item">
-
                 🌐 <strong>Unknown phone number lookup</strong>
-
-                <small>August 20 • 10:15 PM</small>
-
+                <small>March 3 • 7:45 PM</small>
             </div>
 
-
             <div class="app-item">
-
                 🌐 <strong>How to protect private information</strong>
-
-                <small>August 20 • 11:42 PM</small>
-
+                <small>May 12 • 10:10 PM</small>
             </div>
-
 
             <div class="app-item">
-
                 🌐 <strong>What to do if someone is threatening you</strong>
-
-                <small>August 21 • 12:20 AM</small>
-
+                <small>July 9 • 11:48 PM</small>
             </div>
-
 
             <div class="app-notice">
-
                 BROWSER ACTIVITY: Several searches suggest that Elena
-                may have been experiencing a serious problem.
-
+                may have been experiencing a serious problem and
+                trying to protect herself from someone.
             </div>
 
         `
@@ -719,7 +916,7 @@ const appData = {
 
 function openApp(appName) {
 
-    if (!unlocked) return;
+    if (!unlocked || gameOver) return;
 
     const app = appData[appName];
 
@@ -732,13 +929,11 @@ function openApp(appName) {
     if (!appTitle || !appContent || !appWindow) return;
 
     appTitle.textContent = app.title;
-
     appContent.innerHTML = app.content;
 
     appWindow.classList.add("show");
 
     showNotification(app.title + " opened.");
-
 }
 
 
@@ -753,7 +948,6 @@ function closeApp() {
     if (appWindow) {
         appWindow.classList.remove("show");
     }
-
 }
 
 
@@ -763,22 +957,20 @@ function closeApp() {
 
 function showNotification(message) {
 
+    if (gameOver) return;
+
     const notification = document.getElementById("notification");
 
     if (!notification) return;
 
     notification.textContent = message;
-
     notification.classList.add("show");
 
     clearTimeout(notificationTimeout);
 
     notificationTimeout = setTimeout(() => {
-
         notification.classList.remove("show");
-
     }, 3000);
-
 }
 
 
@@ -788,76 +980,68 @@ function showNotification(message) {
 
 function returnToMainMenu() {
 
+    if (gameOver) return;
+
     const confirmReturn = confirm(
-
         "Are you sure you want to return to the Main Menu? Your current investigation progress will be reset."
-
     );
 
     if (!confirmReturn) return;
 
-
-    // STOP TIMER
-
     stopTimer();
 
-
-    // RESET GAME DATA
-
     investigator = "";
-
     score = 100;
-
     seconds = 0;
-
     hintCount = 0;
-
     unlocked = false;
 
+    const currentScore =
+        document.getElementById("currentScore");
 
-    // RESET INPUTS
+    const passwordInput =
+        document.getElementById("passwordInput");
 
-    const currentScore = document.getElementById("currentScore");
-    const passwordInput = document.getElementById("passwordInput");
-    const passwordFeedback = document.getElementById("passwordFeedback");
-    const investigatorName = document.getElementById("investigatorName");
-    const registrationError = document.getElementById("registrationError");
+    const passwordFeedback =
+        document.getElementById("passwordFeedback");
 
-    if (currentScore) currentScore.textContent = score;
+    const investigatorName =
+        document.getElementById("investigatorName");
 
-    if (passwordInput) passwordInput.value = "";
+    const registrationError =
+        document.getElementById("registrationError");
 
-    if (passwordFeedback) {
-
-        passwordFeedback.textContent = "";
-
-        passwordFeedback.style.color = "";
-
+    if (currentScore) {
+        currentScore.textContent = score;
     }
 
-    if (investigatorName) investigatorName.value = "";
+    if (passwordInput) {
+        passwordInput.value = "";
+    }
 
-    if (registrationError) registrationError.textContent = "";
+    if (passwordFeedback) {
+        passwordFeedback.textContent = "";
+        passwordFeedback.style.color = "";
+    }
 
+    if (investigatorName) {
+        investigatorName.value = "";
+    }
 
-    // RESET MODALS AND APPLICATIONS
+    if (registrationError) {
+        registrationError.textContent = "";
+    }
 
     closeApp();
-
     closeClue();
-
-
-    // RESET TIMER DISPLAY
 
     updateTimer();
 
-
-    // RETURN TO START SCREEN
-
     showScreen("startScreen");
 
-    showNotification("Returned to Main Menu. New investigation ready.");
-
+    showNotification(
+        "Returned to Main Menu. New investigation ready."
+    );
 }
 
 
@@ -867,31 +1051,22 @@ function returnToMainMenu() {
 
 document.addEventListener("keydown", function(event) {
 
-    // ESCAPE KEY
-
-    if (event.key === "Escape") {
-
-        closeClue();
-
-        closeApp();
-
+    if (gameOver) {
+        event.preventDefault();
+        return;
     }
 
-
-    // ENTER KEY FOR PASSWORD
+    if (event.key === "Escape") {
+        closeClue();
+        closeApp();
+    }
 
     if (
-
         event.key === "Enter" &&
-
         document.getElementById("passwordScreen")?.classList.contains("active") &&
-
         document.activeElement.id === "passwordInput"
-
     ) {
-
         checkPassword();
-
     }
 
 });
@@ -903,7 +1078,8 @@ document.addEventListener("keydown", function(event) {
 
 document.addEventListener("DOMContentLoaded", function() {
 
-    const currentScore = document.getElementById("currentScore");
+    const currentScore =
+        document.getElementById("currentScore");
 
     if (currentScore) {
         currentScore.textContent = score;
@@ -914,7 +1090,6 @@ document.addEventListener("DOMContentLoaded", function() {
     showScreen("startScreen");
 
     console.log("CASE 404: MISSING TRUTH");
-
     console.log("Game initialized successfully.");
 
 });
