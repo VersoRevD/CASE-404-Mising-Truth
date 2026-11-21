@@ -475,5 +475,49 @@
 
 <script src="script.js"></script>
 
+<div id="resultsScreen" class="screen">
+
+    <div class="container">
+
+        <h1 id="resultTitle">
+            CASE CLOSED
+        </h1>
+
+        <h2 id="resultSubtitle"></h2>
+
+        <p>
+            <strong>Investigator:</strong>
+            <span id="resultName"></span>
+        </p>
+
+        <p>
+            <strong>Final Score:</strong>
+            <span id="resultScore"></span>
+        </p>
+
+        <p>
+            <strong>Completion Time:</strong>
+            <span id="resultTime"></span>
+        </p>
+
+        <p>
+            <strong>Rank:</strong>
+            <span id="resultRank"></span>
+        </p>
+
+        <br>
+
+        <button onclick="restartGame()">
+            PLAY AGAIN
+        </button>
+
+        <button onclick="returnToMainMenu()">
+            MAIN MENU
+        </button>
+
+    </div>
+
+</div>
+
 </body>
 </html>

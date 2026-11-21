@@ -24,6 +24,19 @@ let notificationTimeout = null;
 
 const correctPassword = "0907";
 
+// ==========================================
+// EVIDENCE COLLECTION SYSTEM
+// ==========================================
+
+let evidenceCollected = [];
+
+const requiredEvidence = [
+    "files",
+    "photos",
+    "messages",
+    "notes",
+    "history"
+];
 
 // ==========================================
 // SCREEN NAVIGATION
@@ -221,23 +234,46 @@ function triggerGameOver() {
 
     overlay.id = "gameOverOverlay";
 
-    overlay.innerHTML = `
-        <div class="game-over-content">
-            <p class="game-over-label">
-                CASE 404 / INVESTIGATION TERMINATED
-            </p>
+overlay.innerHTML = `
+<div class="game-over-content">
 
-            <h1>GAME OVER</h1>
+    <h2>CASE 404</h2>
 
-            <p class="game-over-message">
-                You have run out of investigation points.
-            </p>
+    <h1>GAME OVER</h1>
 
-            <p class="game-over-subtitle">
-                RETURNING TO INVESTIGATION GUIDELINES...
-            </p>
-        </div>
-    `;
+    <hr>
+
+    <p>
+        <strong>Status:</strong><br>
+        Investigation Failed
+    </p>
+
+    <p>
+        <strong>Reason:</strong><br>
+        Investigation Points Depleted
+    </p>
+
+    <p>
+        <strong>Final Score:</strong> 0
+    </p>
+
+    <p>
+        <strong>Time:</strong>
+        ${document.getElementById("desktopClock").textContent}
+    </p>
+
+    <p>
+        <strong>Rank:</strong> F
+    </p>
+
+    <hr>
+
+    <p>
+        Returning to Investigation Guidelines...
+    </p>
+
+</div>
+`;
 
     document.body.appendChild(overlay);
 
@@ -934,6 +970,8 @@ function openApp(appName) {
     appWindow.classList.add("show");
 
     showNotification(app.title + " opened.");
+
+    collectEvidence(appName);
 }
 
 
@@ -950,6 +988,421 @@ function closeApp() {
     }
 }
 
+// ==========================================
+// EVIDENCE COLLECTION
+// ==========================================
+
+function collectEvidence(appName) {
+
+    console.log("collectEvidence called:", appName);
+
+    if (!requiredEvidence.includes(appName)) return;
+
+    if (evidenceCollected.includes(appName)) return;
+
+    evidenceCollected.push(appName);
+
+    showNotification(
+        "Evidence Collected! (" +
+        evidenceCollected.length +
+        "/5)"
+    );
+
+    if (evidenceCollected.length === requiredEvidence.length) {
+        unlockHiddenFile();
+    }
+}
+
+// ==========================================
+// HIDDEN FILE
+// ==========================================
+
+function unlockHiddenFile() {
+
+    const appTitle = document.getElementById("appTitle");
+    const appContent = document.getElementById("appContent");
+    const appWindow = document.getElementById("appWindow");
+
+    appTitle.textContent = "EVIDENCE ANALYSIS";
+
+    appContent.innerHTML = `
+        <h3>INVESTIGATION REPORT</h3>
+
+        <div class="app-item">
+            ✅ Journal Entry Reviewed
+        </div>
+
+        <div class="app-item">
+            ✅ Threatening Messages Verified
+        </div>
+
+        <div class="app-item">
+            ✅ Suspicious Photos Examined
+        </div>
+
+        <div class="app-item">
+            ✅ Personal Notes Reviewed
+        </div>
+
+        <div class="app-item">
+            ✅ Browser History Analyzed
+        </div>
+
+        <div class="app-notice">
+            <strong>ANALYSIS COMPLETE</strong><br><br>
+
+            All collected evidence indicates that
+            Elena was being threatened before her death.
+
+            <br><br>
+
+            A hidden encrypted file has been detected.
+        </div>
+
+        <br>
+
+        <button onclick="openHiddenFile()">
+            OPEN HIDDEN FILE
+        </button>
+    `;
+
+    appWindow.classList.add("show");
+}
+
+function openHiddenFile() {
+
+    const appTitle = document.getElementById("appTitle");
+    const appContent = document.getElementById("appContent");
+
+    appTitle.textContent = "hidden_404.dat";
+
+    appContent.innerHTML = `
+        <h3>ENCRYPTED FILE RECOVERED</h3>
+
+        <div class="app-item">
+
+            <p>
+
+            If you are reading this...
+
+            <br><br>
+
+            I failed.
+
+            <br><br>
+
+            The person threatening me is someone I know.
+
+            <br><br>
+
+            They made it look like an accident.
+
+            <br><br>
+
+            I copied every piece of evidence into this file.
+
+            <br><br>
+
+            If I disappear...
+
+            don't believe the official report.
+
+            <br><br>
+
+            Find the truth.
+
+            </p>
+
+        </div>
+
+        <br>
+
+        <button onclick="showPlotTwist()">
+            CONTINUE INVESTIGATION
+        </button>
+    `;
+}
+
+function showPlotTwist() {
+
+     const appTitle = document.getElementById("appTitle");
+    const appContent = document.getElementById("appContent");
+
+    appTitle.textContent = "UNKNOWN TRANSMISSION";
+
+    appContent.innerHTML = `
+
+        <h3>INCOMING MESSAGE...</h3>
+
+        <div class="app-item">
+
+            <strong>UNKNOWN</strong>
+
+            <p>
+
+            "So... you found the hidden file."
+
+            <br><br>
+
+            "You really think you've uncovered
+            the whole truth?"
+
+            <br><br>
+
+            "You've only seen what Elena wanted
+            you to see."
+
+            <br><br>
+
+            "Some evidence was deleted."
+
+            <br><br>
+
+            "I'm still watching."
+
+            <br><br>
+
+            <strong>Connection Lost...</strong>
+
+            </p>
+
+        </div>
+
+        <br>
+
+        <button onclick="showFinalDecision()">
+            REVIEW CASE
+        </button>
+
+    `;
+}
+
+function showFinalDecision() {
+
+    const appTitle = document.getElementById("appTitle");
+    const appContent = document.getElementById("appContent");
+
+    appTitle.textContent = "FINAL DECISION";
+
+    appContent.innerHTML = `
+
+        <h3>CASE REVIEW</h3>
+
+        <p>
+        After examining every piece of evidence,
+        what is your conclusion?
+        </p>
+
+        <br>
+
+        <button onclick="finishGame(true)">
+            Elena was murdered.
+        </button>
+
+        <br><br>
+
+        <button onclick="finishGame(false)">
+            Elena died by suicide.
+        </button>
+
+    `;
+}
+
+function finishGame(correctAnswer) {
+
+    const appTitle = document.getElementById("appTitle");
+    const appContent = document.getElementById("appContent");
+
+    let rank = "";
+
+    if (score >= 90) {
+        rank = "S";
+    }
+    else if (score >= 75) {
+        rank = "A";
+    }
+    else if (score >= 60) {
+        rank = "B";
+    }
+    else {
+        rank = "C";
+    }
+
+    let bestScore = Number(localStorage.getItem("case404HighScore")) || 0;
+
+if (score > bestScore) {
+    localStorage.setItem("case404HighScore", score);
+    bestScore = score;
+}
+
+// ==========================================
+// LEADERBOARD
+// ==========================================
+
+let leaderboard =
+    JSON.parse(localStorage.getItem("case404Leaderboard")) || [];
+
+leaderboard.push({
+    name: investigator,
+    score: score,
+    rank: rank,
+    time: document.getElementById("desktopClock").textContent
+});
+
+leaderboard.sort((a, b) => b.score - a.score);
+
+leaderboard = leaderboard.slice(0, 5);
+
+localStorage.setItem(
+    "case404Leaderboard",
+    JSON.stringify(leaderboard)
+);
+
+let leaderboardHTML = `
+
+<hr>
+
+<h2 style="text-align:center;">
+🏆 DETECTIVE HALL OF FAME
+</h2>
+
+<p style="text-align:center;">
+Top 5 Investigators
+</p>
+
+`;
+
+leaderboard.forEach((player, index) => {
+
+    let medal = "";
+
+    if (index === 0) {
+        medal = "🥇";
+    }
+    else if (index === 1) {
+        medal = "🥈";
+    }
+    else if (index === 2) {
+        medal = "🥉";
+    }
+    else {
+        medal = "🏅";
+    }
+
+    leaderboardHTML += `
+
+        <div class="app-item">
+
+            <h3>${medal} ${player.name}</h3>
+
+            <p>
+
+            <strong>Score:</strong> ${player.score} Points
+
+            <br>
+
+            <strong>Rank:</strong> ${player.rank}
+
+            <br>
+
+            <strong>Completion Time:</strong> ${player.time}
+
+            </p>
+
+        </div>
+
+    `;
+
+});
+
+leaderboardHTML += `
+
+<hr>
+
+`;
+
+    if (correctAnswer) {
+
+        appTitle.textContent = "CASE CLOSED";
+
+        appContent.innerHTML = `
+
+            <h3>YOU SOLVED THE CASE!</h3>
+
+            <div class="app-item">
+
+                <p>
+
+                Based on the recovered evidence,
+                Elena was being threatened before
+                her death.
+
+                <br><br>
+
+                The investigation concludes that
+                her death was NOT a suicide.
+
+                </p>
+
+            </div>
+
+            <hr>
+
+            <strong>Final Score:</strong> ${score}<br>
+            <strong>Best Score:</strong> ${bestScore}<br>
+            <strong>Time:</strong> ${document.getElementById("desktopClock").textContent}<br>
+            <strong>Rank:</strong> ${rank}
+
+            <br><br>
+
+            <button onclick="restartGame()">
+                PLAY AGAIN
+            </button>
+
+        ${leaderboardHTML}
+
+        `;
+
+    } else {
+
+        appTitle.textContent = "CASE FAILED";
+
+        appContent.innerHTML = `
+
+            <h3>INCORRECT CONCLUSION</h3>
+
+            <div class="app-item">
+
+                <p>
+
+                The collected evidence contradicts
+                your conclusion.
+
+                Important clues were overlooked.
+
+                </p>
+
+            </div>
+
+            <hr>
+
+            <strong>Final Score:</strong> ${score}<br>
+            <strong>Best Score:</strong> ${bestScore}<br>
+            <strong>Time:</strong> ${document.getElementById("desktopClock").textContent}<br>
+            <strong>Rank:</strong> ${rank}
+
+            <br><br>
+
+            <button onclick="restartGame()">
+                TRY AGAIN
+            </button>
+
+        ${leaderboardHTML}
+
+        `;
+    }
+
+}
 
 // ==========================================
 // NOTIFICATION SYSTEM
@@ -1070,6 +1523,54 @@ document.addEventListener("keydown", function(event) {
     }
 
 });
+
+// ==========================================
+// RESTART GAME
+// ==========================================
+
+function restartGame() {
+
+    evidenceCollected = [];
+
+    investigator = "";
+    score = 100;
+    seconds = 0;
+    hintCount = 0;
+    unlocked = false;
+    gameOver = false;
+
+    stopTimer();
+
+    const currentScore = document.getElementById("currentScore");
+    if (currentScore) {
+        currentScore.textContent = "100";
+    }
+
+    const passwordInput = document.getElementById("passwordInput");
+    if (passwordInput) {
+        passwordInput.value = "";
+    }
+
+    const passwordFeedback = document.getElementById("passwordFeedback");
+    if (passwordFeedback) {
+        passwordFeedback.textContent = "";
+        passwordFeedback.style.color = "";
+    }
+
+    const investigatorName = document.getElementById("investigatorName");
+    if (investigatorName) {
+        investigatorName.value = "";
+    }
+
+    updateTimer();
+
+    closeApp();
+    closeClue();
+
+    showScreen("startScreen");
+
+    showNotification("New investigation started.");
+}
 
 
 // ==========================================
