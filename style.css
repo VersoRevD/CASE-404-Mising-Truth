@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
 /* =====================================
@@ -45,6 +44,38 @@ input {
 
 button {
     cursor: pointer;
+}
+
+/* =====================================
+   AUDIO MUTE BUTTON
+===================================== */
+
+.audio-toggle-btn {
+    position: fixed;
+    top: 14px;
+    right: 16px;
+    z-index: 40;
+    background: rgba(18, 19, 23, 0.92);
+    color: #e7e4e1;
+    border: 1px solid #654047;
+    border-radius: 3px;
+    padding: 7px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: .25s ease;
+}
+
+.audio-toggle-btn:hover {
+    background: #542329;
+    border-color: #b34a52;
+    color: #ffffff;
+}
+
+.audio-toggle-btn.muted {
+    color: #b69498;
+    border-color: #463338;
 }
 
 /* =====================================
