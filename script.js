@@ -1,4 +1,3 @@
-
 // ==========================================
 // CASE 404: MISSING TRUTH
 // COMPLETE GAME JAVASCRIPT
@@ -23,6 +22,113 @@ let gameOverTimeout = null;
 let notificationTimeout = null;
 
 const correctPassword = "0907";
+
+let musicMuted = false;
+let clickAudioCtx = null;
+
+// ==========================================
+// BACKGROUND MUSIC (ON FROM BEGINNING) & CLICK SOUND
+// ==========================================
+
+function updateAudioButtonUI() {
+    const btn = document.getElementById("audioToggleBtn");
+    if (!btn) return;
+
+    if (musicMuted) {
+        btn.textContent = "🔇 SOUND: OFF";
+        btn.classList.add("muted");
+    } else {
+        btn.textContent = "🔊 SOUND: ON";
+        btn.classList.remove("muted");
+    }
+}
+
+function playBackgroundMusic() {
+    const audio = document.getElementById("bgMusic");
+    if (!audio) return;
+
+    audio.loop = true;
+    audio.volume = 0.35;
+    audio.muted = musicMuted;
+
+    if (!musicMuted) {
+        audio.play().catch(() => {});
+    }
+}
+
+function toggleBackgroundMusic() {
+    const audio = document.getElementById("bgMusic");
+    musicMuted = !musicMuted;
+    updateAudioButtonUI();
+
+    if (!audio) return;
+
+    audio.muted = musicMuted;
+    if (!musicMuted) {
+        audio.volume = 0.35;
+        audio.loop = true;
+        audio.play().catch(() => {});
+        showNotification("Background music enabled.");
+    } else {
+        showNotification("Background music muted.");
+    }
+}
+
+function playClickSound() {
+    if (musicMuted) return;
+
+    try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+
+        if (!clickAudioCtx) {
+            clickAudioCtx = new AudioContextClass();
+        }
+        if (clickAudioCtx.state === "suspended") {
+            clickAudioCtx.resume().catch(() => {});
+        }
+
+        const now = clickAudioCtx.currentTime;
+        const osc = clickAudioCtx.createOscillator();
+        const gain = clickAudioCtx.createGain();
+
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(520, now);
+        osc.frequency.exponentialRampToValueAtTime(190, now + 0.045);
+
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+
+        osc.connect(gain);
+        gain.connect(clickAudioCtx.destination);
+
+        osc.start(now);
+        osc.stop(now + 0.05);
+    } catch (_) {
+        // Ignore audio synthesis restrictions
+    }
+}
+
+function initBackgroundMusic() {
+    musicMuted = false;
+    updateAudioButtonUI();
+    playBackgroundMusic();
+
+    const unlockOnce = () => {
+        playBackgroundMusic();
+        document.removeEventListener("pointerdown", unlockOnce);
+        document.removeEventListener("keydown", unlockOnce);
+    };
+
+    document.addEventListener("pointerdown", unlockOnce, { once: true });
+    document.addEventListener("keydown", unlockOnce, { once: true });
+
+    document.addEventListener("click", function(event) {
+        if (event.target.closest("button, .clue-card, .app-icon")) {
+            playClickSound();
+        }
+    });
+}
 
 // ==========================================
 // EVIDENCE COLLECTION SYSTEM
@@ -302,6 +408,7 @@ function resetAfterGameOver() {
     seconds = 0;
     hintCount = 0;
     unlocked = false;
+    evidenceCollected = [];
 
     stopTimer();
 
@@ -1426,10 +1533,15 @@ function showNotification(message) {
     }, 3000);
 }
 
+// ==========================================
+// RESTART & MAIN MENU
+// ==========================================
 
-// ==========================================
-// RETURN TO MAIN MENU
-// ==========================================
+function restartGame() {
+    resetAfterGameOver();
+    closeApp();
+    showScreen("passwordScreen");
+}
 
 function returnToMainMenu() {
 
@@ -1441,55 +1553,7 @@ function returnToMainMenu() {
 
     if (!confirmReturn) return;
 
-    stopTimer();
-
-    investigator = "";
-    score = 100;
-    seconds = 0;
-    hintCount = 0;
-    unlocked = false;
-
-    const currentScore =
-        document.getElementById("currentScore");
-
-    const passwordInput =
-        document.getElementById("passwordInput");
-
-    const passwordFeedback =
-        document.getElementById("passwordFeedback");
-
-    const investigatorName =
-        document.getElementById("investigatorName");
-
-    const registrationError =
-        document.getElementById("registrationError");
-
-    if (currentScore) {
-        currentScore.textContent = score;
-    }
-
-    if (passwordInput) {
-        passwordInput.value = "";
-    }
-
-    if (passwordFeedback) {
-        passwordFeedback.textContent = "";
-        passwordFeedback.style.color = "";
-    }
-
-    if (investigatorName) {
-        investigatorName.value = "";
-    }
-
-    if (registrationError) {
-        registrationError.textContent = "";
-    }
-
-    closeApp();
-    closeClue();
-
-    updateTimer();
-
+    resetAfterGameOver();
     showScreen("startScreen");
 
     showNotification(
@@ -1497,9 +1561,8 @@ function returnToMainMenu() {
     );
 }
 
-
 // ==========================================
-// KEYBOARD SHORTCUTS
+// KEYBOARD SHORTCUTS & INIT
 // ==========================================
 
 document.addEventListener("keydown", function(event) {
@@ -1524,60 +1587,9 @@ document.addEventListener("keydown", function(event) {
 
 });
 
-// ==========================================
-// RESTART GAME
-// ==========================================
-
-function restartGame() {
-
-    evidenceCollected = [];
-
-    investigator = "";
-    score = 100;
-    seconds = 0;
-    hintCount = 0;
-    unlocked = false;
-    gameOver = false;
-
-    stopTimer();
-
-    const currentScore = document.getElementById("currentScore");
-    if (currentScore) {
-        currentScore.textContent = "100";
-    }
-
-    const passwordInput = document.getElementById("passwordInput");
-    if (passwordInput) {
-        passwordInput.value = "";
-    }
-
-    const passwordFeedback = document.getElementById("passwordFeedback");
-    if (passwordFeedback) {
-        passwordFeedback.textContent = "";
-        passwordFeedback.style.color = "";
-    }
-
-    const investigatorName = document.getElementById("investigatorName");
-    if (investigatorName) {
-        investigatorName.value = "";
-    }
-
-    updateTimer();
-
-    closeApp();
-    closeClue();
-
-    showScreen("startScreen");
-
-    showNotification("New investigation started.");
-}
-
-
-// ==========================================
-// INITIAL GAME DISPLAY
-// ==========================================
-
 document.addEventListener("DOMContentLoaded", function() {
+
+    initBackgroundMusic();
 
     const currentScore =
         document.getElementById("currentScore");
@@ -1587,10 +1599,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     updateTimer();
-
     showScreen("startScreen");
-
-    console.log("CASE 404: MISSING TRUTH");
-    console.log("Game initialized successfully.");
 
 });
