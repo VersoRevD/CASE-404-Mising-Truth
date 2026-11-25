@@ -21,7 +21,7 @@ let gameOver = false;
 let gameOverTimeout = null;
 let notificationTimeout = null;
 
-const correctPassword = "0907";
+const correctPassword = "EMS#0907!";
 
 let musicMuted = false;
 let clickAudioCtx = null;
@@ -340,7 +340,7 @@ function triggerGameOver() {
 
     overlay.id = "gameOverOverlay";
 
-overlay.innerHTML = `
+    overlay.innerHTML = `
 <div class="game-over-content">
 
     <h2>CASE 404</h2>
@@ -476,15 +476,15 @@ const clues = [
     },
 
     {
-        title: "CALENDAR ENTRY",
+        title: "SECURITY STICKY NOTE",
 
-        text: `"JULY 9 — A day I will always remember. No matter what happens, this date will stay with me."`
+        text: `"After looking into protecting my privacy, I set a stronger laptop password using my full name's initials in uppercase, the symbol above the number 3, my key date (day first, then month), and an exclamation mark at the end for urgency."`
     },
 
     {
         title: "OLD REMINDER",
 
-        text: `"If I ever forget my computer password, remember this: Enter the day first, followed by the month. Four digits only."`
+        text: `"Don't forget: initials first, then the hash symbol, then the 4-digit date (day followed by month), finished with '!'. Case matters."`
     }
 
 ];
@@ -522,13 +522,13 @@ function closeClue() {
 
 const hints = [
 
-    "HINT 1: The password is connected to an important date in Elena's life.",
+    "HINT 1: The password combines Elena Marie Santos's initials, a date, and punctuation.",
 
-    "HINT 2: Look closely at the Personal Note and Calendar Entry.",
+    "HINT 2: Her initials are EMS (uppercase), followed by the '#' symbol.",
 
-    "HINT 3: The password contains four digits. Enter the day first, followed by the month.",
+    "HINT 3: The 4-digit date is July 9 written day first, then month (0907).",
 
-    "HINT 4: The date is July 9. Remember the required order."
+    "HINT 4: Put it all together with an exclamation mark at the end: EMS#0907! (case-sensitive)."
 
 ];
 
@@ -586,13 +586,10 @@ function checkPassword() {
         return;
     }
 
-    if (
-        enteredPassword.length !== 4 ||
-        !/^\d{4}$/.test(enteredPassword)
-    ) {
+    if (enteredPassword.length !== correctPassword.length) {
 
         feedback.textContent =
-            "Password must contain exactly 4 digits.";
+            "Password must be exactly 9 characters long.";
 
         input.value = "";
         input.focus();
@@ -1232,7 +1229,7 @@ function openHiddenFile() {
 
 function showPlotTwist() {
 
-     const appTitle = document.getElementById("appTitle");
+    const appTitle = document.getElementById("appTitle");
     const appContent = document.getElementById("appContent");
 
     appTitle.textContent = "UNKNOWN TRANSMISSION";
@@ -1337,35 +1334,35 @@ function finishGame(correctAnswer) {
 
     let bestScore = Number(localStorage.getItem("case404HighScore")) || 0;
 
-if (score > bestScore) {
-    localStorage.setItem("case404HighScore", score);
-    bestScore = score;
-}
+    if (score > bestScore) {
+        localStorage.setItem("case404HighScore", score);
+        bestScore = score;
+    }
 
 // ==========================================
 // LEADERBOARD
 // ==========================================
 
-let leaderboard =
-    JSON.parse(localStorage.getItem("case404Leaderboard")) || [];
+    let leaderboard =
+        JSON.parse(localStorage.getItem("case404Leaderboard")) || [];
 
-leaderboard.push({
-    name: investigator,
-    score: score,
-    rank: rank,
-    time: document.getElementById("desktopClock").textContent
-});
+    leaderboard.push({
+        name: investigator,
+        score: score,
+        rank: rank,
+        time: document.getElementById("desktopClock").textContent
+    });
 
-leaderboard.sort((a, b) => b.score - a.score);
+    leaderboard.sort((a, b) => b.score - a.score);
 
-leaderboard = leaderboard.slice(0, 5);
+    leaderboard = leaderboard.slice(0, 5);
 
-localStorage.setItem(
-    "case404Leaderboard",
-    JSON.stringify(leaderboard)
-);
+    localStorage.setItem(
+        "case404Leaderboard",
+        JSON.stringify(leaderboard)
+    );
 
-let leaderboardHTML = `
+    let leaderboardHTML = `
 
 <hr>
 
@@ -1379,24 +1376,24 @@ Top 5 Investigators
 
 `;
 
-leaderboard.forEach((player, index) => {
+    leaderboard.forEach((player, index) => {
 
-    let medal = "";
+        let medal = "";
 
-    if (index === 0) {
-        medal = "🥇";
-    }
-    else if (index === 1) {
-        medal = "🥈";
-    }
-    else if (index === 2) {
-        medal = "🥉";
-    }
-    else {
-        medal = "🏅";
-    }
+        if (index === 0) {
+            medal = "🥇";
+        }
+        else if (index === 1) {
+            medal = "🥈";
+        }
+        else if (index === 2) {
+            medal = "🥉";
+        }
+        else {
+            medal = "🏅";
+        }
 
-    leaderboardHTML += `
+        leaderboardHTML += `
 
         <div class="app-item">
 
@@ -1420,9 +1417,9 @@ leaderboard.forEach((player, index) => {
 
     `;
 
-});
+    });
 
-leaderboardHTML += `
+    leaderboardHTML += `
 
 <hr>
 
